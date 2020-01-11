@@ -2,13 +2,12 @@ package com.blogomat.blogomat.controllers;
 
 import com.blogomat.blogomat.model.entities.PostReport;
 import com.blogomat.blogomat.services.AdminService;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping(path = "/admin")
-@PreAuthorize("hasRole('ROLE_ADMIN')")
+//@PreAuthorize("hasRole('ROLE_ADMIN')")
 public class AdminController {
     private final AdminService adminService;
 

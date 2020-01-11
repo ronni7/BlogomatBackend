@@ -9,7 +9,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -40,10 +39,6 @@ public class BlogomatApplication {
             Role admin = new Role("admin");
             Role user = new Role("user");
 
-            roleRepository.save(user);
-            roleRepository.save(admin);
-            userRepository.save(new User("user", "user", BCrypt.hashpw("pass", BCrypt.gensalt()), "email@email.com", GENDER.MALE, user));
-            userRepository.save(new User("admin", "admin", BCrypt.hashpw("admin", BCrypt.gensalt()), "email@email.com", GENDER.MALE, admin));
 
             repository.save(new Post("tytuł1", new HashSet<>((Arrays.asList(tab).subList(0, 2))), "Content1Content1Content1Content1Content1", Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant()), "Author1"));
             repository.save(new Post("tytuł2", new HashSet<>(Arrays.asList(tab).subList(2, 4)), "Content2Content1Content1Content1Content1", Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant().minus(Period.ofDays(1))), "Author1"));
@@ -74,6 +69,10 @@ public class BlogomatApplication {
             commentRepository.save(new Comment(5, Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant().minus(Period.ofDays(1))), "User4", "COntent 5 commenta"));
 
 
+            roleRepository.save(user);
+            roleRepository.save(admin);
+            userRepository.save(new User("user", "user", "pass", "email@email.com", GENDER.MALE, user));
+            userRepository.save(new User("admin", "admin", "admin", "email@email.com", GENDER.MALE, admin));
             // fetch all Posts
             log.info("Users found with findAll():");
             log.info("-------------------------------");

@@ -8,7 +8,6 @@ import com.blogomat.blogomat.model.entities.dataObjects.LikeItVO;
 import com.blogomat.blogomat.services.CommentServiceImpl;
 import com.blogomat.blogomat.services.LikeServiceImpl;
 import com.blogomat.blogomat.services.PostServiceImpl;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,25 +45,29 @@ public class PostController {
         System.out.println("order = " + order);
         return postService.getAllPostsSorted(sort, order);
     }
+
     @PostMapping(path = "/postsFiltered")
     public @ResponseBody
     Iterable<Post> getPostsFiltered(@RequestBody FilterVO filterVO) {
         System.out.println("filterVO = " + filterVO);
         return postService.getAllPostsSorted(filterVO);
     }
+
     @GetMapping(path = "/postsSortedByLikes")
     public @ResponseBody
     Iterable<Post> getPostsSortedByLikes() {
 
         return postService.getAllPostsSortedByLikes();
     }
-  //  @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+
+    //  @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @PostMapping(path = "/add")
     public @ResponseBody
     Post addPost(@RequestBody Post post) {
         return postService.add(post);
     }
-  //  @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+
+    //  @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @PostMapping(path = "/like")
     public @ResponseBody
     boolean like(@RequestBody LikeItVO likeVO) {
@@ -76,7 +79,8 @@ public class PostController {
     int getLikes(@RequestBody Integer postID) {
         return likeService.getLikes(postID);
     }
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+
+    //@PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @PostMapping(path = "/reportPost")
     public @ResponseBody
     PostReport report(@RequestBody PostReport report) {
@@ -90,7 +94,8 @@ public class PostController {
         System.out.println("commentService posts= " + commentService.getComments(postID));
         return commentService.getComments(postID);
     }
-   // @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+
+    // @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @PostMapping(path = "/addComment")
     public @ResponseBody
     Comment addComment(@RequestBody Comment comment) {
