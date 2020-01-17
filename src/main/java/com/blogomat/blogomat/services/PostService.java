@@ -9,8 +9,6 @@ public interface PostService {
 
     Post add(Post post);
 
-    void deletePostByID(int postID);
-
     PostReport reportPost(PostReport report);
 
     Iterable<Post> getAllPostsSorted(String sort, String order);

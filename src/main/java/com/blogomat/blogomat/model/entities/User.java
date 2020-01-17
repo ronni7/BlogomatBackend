@@ -4,10 +4,9 @@ import com.blogomat.blogomat.enums.GENDER;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Arrays;
 
 @Entity
-@Table(name = "\"user\"")
+@Table(name = "userTab")
 public class User implements Serializable {
     public User() {
     }
@@ -96,7 +95,7 @@ public class User implements Serializable {
                 "userID=" + userID +
                 ", login='" + login + '\'' +
                 ", username='" + username + '\'' +
-                ", password=" + password+
+                ", password=" + password +
                 ", email='" + email + '\'' +
                 ", sex=" + sex +
                 ", role=" + role +

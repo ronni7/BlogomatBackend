@@ -34,11 +34,6 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void deletePostByID(int postID) {
-        postRepository.deleteById(postID);
-    }
-
-    @Override
     public PostReport reportPost(PostReport report) {
         return reportRepository.save(report);
     }

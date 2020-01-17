@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.util.Set;
 
 @Entity
-@Table(name = "\"like\"")
+@Table(name = "\"likeTable\"")
 public class Like implements Serializable {
     public Like() {
     }

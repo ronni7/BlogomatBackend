@@ -1,6 +1,7 @@
 package com.blogomat.blogomat.controllers;
 
 
+import com.blogomat.blogomat.model.entities.ContactMessage;
 import com.blogomat.blogomat.model.entities.User;
 import com.blogomat.blogomat.model.entities.dataObjects.CredentialsVO;
 import com.blogomat.blogomat.services.UserServiceImpl;
@@ -38,5 +39,11 @@ public class MainController {
     public @ResponseBody
     User registerNewUser(@RequestBody User u) {
         return userService.registerNewUser(u);
+    }
+
+    @PostMapping(path = "/contactAdmin")
+    public @ResponseBody
+    void contactAdmin(@RequestBody ContactMessage contactMessage) {
+        userService.contactAdmin(contactMessage);
     }
 }

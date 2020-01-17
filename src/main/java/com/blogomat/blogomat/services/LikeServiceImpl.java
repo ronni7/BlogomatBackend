@@ -4,6 +4,7 @@ import com.blogomat.blogomat.model.entities.Like;
 import com.blogomat.blogomat.repositories.LikeRepository;
 import org.springframework.stereotype.Component;
 
+import java.util.HashSet;
 import java.util.Optional;
 
 @Component
@@ -18,19 +19,15 @@ public class LikeServiceImpl implements LikeService {
     @Override
     public int getLikes(int postID) {
         Optional<Like> l = likeRepository.findByPostID(postID);
-        return l.map(like -> like.getUsersLiked().size()).orElse(-1);
+        return l.map(like -> like.getUsersLiked().size()).orElse(0);
     }
 
     @Override
-    public boolean like(int postID, int userID) {
+    public void like(int postID, int userID) {
 
         Optional<Like> l = likeRepository.findByPostID(postID);
-        if (l.isPresent()) {
-            Like like = l.get();
-            like.getUsersLiked().add(userID);
-            likeRepository.save(like);
-            return true;
-        }
-        return false;
+        Like like = l.orElseGet(() -> new Like(postID, new HashSet<>()));
+        like.getUsersLiked().add(userID);
+        likeRepository.save(like);
     }
 }

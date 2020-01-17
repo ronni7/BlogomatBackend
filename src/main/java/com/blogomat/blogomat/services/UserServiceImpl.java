@@ -1,19 +1,21 @@
 package com.blogomat.blogomat.services;
 
+import com.blogomat.blogomat.model.entities.ContactMessage;
 import com.blogomat.blogomat.model.entities.User;
-import com.blogomat.blogomat.model.entities.dataObjects.UserLoggedDTO;
+import com.blogomat.blogomat.repositories.ContactRepository;
 import com.blogomat.blogomat.repositories.UserRepository;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
+    private ContactRepository contactRepository;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, ContactRepository contactRepository) {
         this.userRepository = userRepository;
+        this.contactRepository = contactRepository;
     }
 
     @Override
@@ -29,13 +31,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User logUserIn(String login, String password) {
-       // ArrayList<User> list = new ArrayList<>(userRepository.findByLogin(login));
-      //  for (User u : list)
+        // ArrayList<User> list = new ArrayList<>(userRepository.findByLogin(login));
+        //  for (User u : list)
          /*   if (BCrypt.checkpw(String.valueOf(password), String.valueOf(u.getPassword())))
                 return new UserLoggedDTO(u.getName(), u.getEmail(), u.getSex(), u.getRole());*/
 
-            /*   logUserIn(login, password);*/
-            return userRepository.findByLogin(login);
+        /*   logUserIn(login, password);*/
+        return userRepository.findByLogin(login);
+    }
+
+    @Override
+    public void contactAdmin(ContactMessage contactMessage) {
+        contactRepository.save(contactMessage);
+    }
+
+    @Override
+    public Iterable<ContactMessage> getContactMessages() {
+        return contactRepository.findAll();
     }
 /*
     @Override

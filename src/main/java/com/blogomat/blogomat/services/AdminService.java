@@ -8,4 +8,6 @@ public interface AdminService {
     void deletePost(int postID);
 
     void deleteByReportID(int reportID);
+
+    void deleteByContactMessageID(Integer contactMessageID);
 }

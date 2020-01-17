@@ -70,8 +70,8 @@ public class PostController {
     //  @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @PostMapping(path = "/like")
     public @ResponseBody
-    boolean like(@RequestBody LikeItVO likeVO) {
-        return likeService.like(likeVO.getPostID(), likeVO.getUserID());
+    void like(@RequestBody LikeItVO likeVO) {
+         likeService.like(likeVO.getPostID(), likeVO.getUserID());
     }
 
     @PostMapping(path = "/getLikes")
