@@ -1,4 +1,4 @@
-package com.blogomat.blogomat.model.entities.dataObjects;
+package com.blogomat.blogomat.model.VO;
 
 public class LikeItVO {
     private Integer userID;

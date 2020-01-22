@@ -4,12 +4,13 @@ import com.blogomat.blogomat.model.entities.User;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface UserRepository extends CrudRepository<User, Integer> {
     List<User> findAll();
 
-    User findByLogin(String login);
+    Iterable<User> findByLogin(String login);
 
-    User findByUsername(String Username);
+    Optional<User> findByUsername(String Username);
 }

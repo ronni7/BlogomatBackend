@@ -1,15 +1,15 @@
 package com.blogomat.blogomat.controllers;
 
-import com.blogomat.blogomat.model.entities.Comment;
 import com.blogomat.blogomat.model.entities.Post;
 import com.blogomat.blogomat.model.entities.PostReport;
-import com.blogomat.blogomat.model.entities.dataObjects.FilterVO;
-import com.blogomat.blogomat.model.entities.dataObjects.LikeItVO;
-import com.blogomat.blogomat.services.CommentServiceImpl;
+import com.blogomat.blogomat.model.VO.FilterVO;
+import com.blogomat.blogomat.model.VO.LikeItVO;
 import com.blogomat.blogomat.services.LikeServiceImpl;
 import com.blogomat.blogomat.services.PostServiceImpl;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @Component
 @RestController
@@ -18,19 +18,11 @@ import org.springframework.web.bind.annotation.*;
 public class PostController {
     private final PostServiceImpl postService;
     private final LikeServiceImpl likeService;
-    private final CommentServiceImpl commentService;
 
-    public PostController(PostServiceImpl postService, LikeServiceImpl likeService, CommentServiceImpl commentService) {
+    public PostController(PostServiceImpl postService, LikeServiceImpl likeService) {
         this.postService = postService;
         this.likeService = likeService;
-        this.commentService = commentService;
     }
-/*
-    @PostMapping(path = "/posts")
-    public @ResponseBody
-    Iterable<Post> getPosts(@RequestBody SearchCriteria) {
-        return postService.getAllPosts();
-    }*/
 
     @GetMapping(path = "/postsTest")
     public @ResponseBody
@@ -52,7 +44,11 @@ public class PostController {
         System.out.println("filterVO = " + filterVO);
         return postService.getAllPostsSorted(filterVO);
     }
-
+    @PostMapping(path = "/postsByAuthorName")
+    public @ResponseBody
+    Iterable<Post> getAuthorPosts(@RequestBody String username) {
+        return postService.getAuthorPosts(username);
+    }
     @GetMapping(path = "/postsSortedByLikes")
     public @ResponseBody
     Iterable<Post> getPostsSortedByLikes() {
@@ -87,97 +83,12 @@ public class PostController {
         return postService.reportPost(report);
     }
 
-    @PostMapping(path = "/getComments")
+
+    @GetMapping(path = "/getPost/{postID}")
     public @ResponseBody
-    Iterable<Comment> getComments(@RequestBody Integer postID) {
-        System.out.println("postID = " + postID);
-        System.out.println("commentService posts= " + commentService.getComments(postID));
-        return commentService.getComments(postID);
+    Optional<Post> getPostByID(@PathVariable Integer postID)
+    {
+        return postService.getPostByID(postID);
     }
 
-    // @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
-    @PostMapping(path = "/addComment")
-    public @ResponseBody
-    Comment addComment(@RequestBody Comment comment) {
-        return commentService.add(comment);
-    }
-   /* @GetMapping(path = "/watch")
-    public @ResponseBody
-    String routeUserToChannelWithHyperlinkLink(@RequestParam int channelID) {
-        return channelService.getChannelByChannelID(channelID).getHyperlink();
-    }
-
-    @GetMapping(path = "/allMovies")
-    public @ResponseBody
-    List<MovieDTO> allMovies() {
-        return serverService.getAllMovies();
-    }
-
-    @GetMapping(path = "/allM")
-    public @ResponseBody
-    List<Movie> allM() {
-        return serverService.findAll();
-    }
-
-    @GetMapping(path = "/allChannels")
-    public @ResponseBody
-    List<Channel> allChannels() {
-        return channelService.getAllChannels();
-    }
-
-    @PostMapping(path = "/saveChannel")
-    public @ResponseBody
-    Channel saveChannel(@RequestBody Channel channel) {
-        return channelService.save(channel);
-    }
-
-    @PostMapping(path = "/saveMovie")
-    public @ResponseBody
-    MovieDTO saveMovie(@RequestBody Movie movie) {
-
-        return serverService.save(movie);
-    }
-
-    @PostMapping(path = "/updateMovie")
-    public @ResponseBody
-    Movie updateMovie(@RequestParam int channelID, @RequestParam int movieID, @RequestParam String startingTime) {
-        Movie m = serverService.findMovieByMovieID(movieID);
-        m.setStartAtTime(startingTime);
-        m.setChannel(channelService.getChannelByChannelID(channelID));
-        return serverService.saveFullMovie(m);
-    }
-
-    @PostMapping(path = "/updateChannel")
-    public @ResponseBody
-    Channel updateChannel(@RequestParam int channelID, @RequestParam int movieID, @RequestParam String startingTime) {
-        Channel c = channelService.getChannelByChannelID(channelID);
-        c.getPlaylist().add(serverService.findMovieByMovieID(updateMovie(channelID, movieID, startingTime).getMovieID()));
-        return channelService.save(c);
-    }
-
-    @PostMapping(path = "/updateChannelHyperlink")
-    public @ResponseBody
-    Channel setChannelHyperlink(@RequestParam int channelID, @RequestParam String hyperlink) {
-        Channel c = channelService.getChannelByChannelID(channelID);
-        c.setHyperlink(hyperlink);
-        return channelService.save(c);
-    }
-
-    @GetMapping(path = "/getMovieFilename")
-    public @ResponseBody
-    String getMovieFilename(@RequestParam int movieID) {
-        return serverService.findMovieByMovieID(movieID).getFileName();
-    }
-
-    @PostMapping(path = "/deleteChannel")
-    public @ResponseBody
-    void deleteChannel(@RequestParam int channelID) {
-        channelService.deleteChannelByChannelID(channelID);
-    }
-
-    @PostMapping(path = "/deleteMovie")
-    public @ResponseBody
-    void deleteMovie(@RequestParam int movieID) {
-        serverService.deleteMovieByID(movieID);
-    }*/
 }

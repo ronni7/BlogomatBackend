@@ -2,7 +2,7 @@ package com.blogomat.blogomat.services;
 
 import com.blogomat.blogomat.model.entities.Post;
 import com.blogomat.blogomat.model.entities.PostReport;
-import com.blogomat.blogomat.model.entities.dataObjects.FilterVO;
+import com.blogomat.blogomat.model.VO.FilterVO;
 import com.blogomat.blogomat.repositories.PostRepository;
 import com.blogomat.blogomat.repositories.ReportRepository;
 import org.springframework.data.domain.Sort;
@@ -40,7 +40,6 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Iterable<Post> getAllPostsSorted(String sort, String order) {
-        System.out.println("postRepository.findAll(Sort.by(order.toUpperCase().equals(\"ASC\") ? Sort.Direction.ASC : Sort.Direction.DESC,sort)) = " + postRepository.findAll(Sort.by(order.toUpperCase().equals("ASC") ? Sort.Direction.ASC : Sort.Direction.DESC, sort)));
         return postRepository.findAll(Sort.by(order.toUpperCase().equals("ASC") ? Sort.Direction.ASC : Sort.Direction.DESC, sort));
     }
 
@@ -49,22 +48,13 @@ public class PostServiceImpl implements PostService {
         List<Post> list = (List<Post>) postRepository.findAll();
         Map<Post, Integer> map = new HashMap<>();
         list.forEach(post -> map.put(post, likeService.getLikes(post.getId())));
-     /*   for (Post p : list) {
-            map.put(p, likeService.getLikes(p.getId()));
-        }*/
-        System.out.println("map = " + map);
-
-        Map<Post, Integer> result = map.entrySet()
+          Map<Post, Integer> result = map.entrySet()
                 .stream()
                 .sorted(Map.Entry.comparingByValue())
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
                         Map.Entry::getValue,
                         (oldValue, newValue) -> newValue, LinkedHashMap::new));
-        System.out.println("result = " + result);
-        for (Map.Entry<Post, Integer> entry : result.entrySet()) {
-            System.out.println("entry = " + entry);
-        }
         List<Post> resultList = new ArrayList<>(result.keySet());
         Collections.reverse(resultList);
         return resultList;
@@ -73,11 +63,20 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Iterable<Post> getAllPostsSorted(FilterVO filterVO) {
-        System.out.println("filterVO = " + filterVO);
         return postRepository.findAll(Sort.by(filterVO.getOrder().toUpperCase().equals("ASC") ? Sort.Direction.ASC :
                 Sort.Direction.DESC, filterVO.getSort()));
 // search criteria
 
+    }
+
+    @Override
+    public Iterable<Post> getAuthorPosts(String username) {
+        return postRepository.findAllByAuthor(username);
+    }
+
+    @Override
+    public Optional<Post> getPostByID(Integer postID) {
+        return postRepository.findById(postID);
     }
 
 }

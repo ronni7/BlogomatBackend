@@ -19,8 +19,6 @@ public class CommentController {
     @PostMapping(path = "/getComments")
     public @ResponseBody
     Iterable<Comment> getComments(@RequestBody Integer postID) {
-        System.out.println("postID = " + postID);
-        System.out.println("commentService posts= " + commentService.getComments(postID));
         return commentService.getComments(postID);
     }
 

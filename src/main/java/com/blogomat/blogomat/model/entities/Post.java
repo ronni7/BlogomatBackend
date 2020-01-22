@@ -1,5 +1,7 @@
 package com.blogomat.blogomat.model.entities;
 
+import org.hibernate.validator.constraints.Length;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -14,6 +16,7 @@ public class Post implements Serializable {
     private String title;
     @ElementCollection
     private Set<String> tags;
+    @Length(max = 16384)
     private String postContent;
     private Date publishDate;
     private String author;

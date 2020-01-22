@@ -1,26 +1,31 @@
 package com.blogomat.blogomat.services;
 
-import com.blogomat.blogomat.model.entities.ContactMessage;
-import com.blogomat.blogomat.model.entities.User;
-import com.blogomat.blogomat.repositories.ContactRepository;
-import com.blogomat.blogomat.repositories.UserRepository;
+import com.blogomat.blogomat.model.entities.*;
+import com.blogomat.blogomat.model.VO.UserContextVO;
+import com.blogomat.blogomat.repositories.*;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     private ContactRepository contactRepository;
+    private SocialMediaRepository socialMediaRepository;
+    private UserDetailsRepository userDetailsRepository;
+    private PersonalDataSettingsRepository personalDataSettingsRepository;
+    private SocialMediaSettingsRepository socialMediaSettingsRepository;
+    private ThemeRepository themeRepository;
 
-    public UserServiceImpl(UserRepository userRepository, ContactRepository contactRepository) {
+    public UserServiceImpl(UserRepository userRepository, ContactRepository contactRepository, SocialMediaRepository socialMediaRepository, UserDetailsRepository userDetailsRepository, PersonalDataSettingsRepository personalDataSettingsRepository, SocialMediaSettingsRepository socialMediaSettingsRepository, ThemeRepository themeRepository) {
         this.userRepository = userRepository;
         this.contactRepository = contactRepository;
-    }
-
-    @Override
-    public List<com.blogomat.blogomat.model.entities.User> findAll() {
-        return userRepository.findAll();
+        this.socialMediaRepository = socialMediaRepository;
+        this.userDetailsRepository = userDetailsRepository;
+        this.personalDataSettingsRepository = personalDataSettingsRepository;
+        this.socialMediaSettingsRepository = socialMediaSettingsRepository;
+        this.themeRepository = themeRepository;
     }
 
     @Override
@@ -30,14 +35,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User logUserIn(String login, String password) {
-        // ArrayList<User> list = new ArrayList<>(userRepository.findByLogin(login));
-        //  for (User u : list)
-         /*   if (BCrypt.checkpw(String.valueOf(password), String.valueOf(u.getPassword())))
-                return new UserLoggedDTO(u.getName(), u.getEmail(), u.getSex(), u.getRole());*/
-
-        /*   logUserIn(login, password);*/
-        return userRepository.findByLogin(login);
+    public UserContextVO logUserIn(String login, String password) {
+        Iterable<User> u = userRepository.findByLogin(login);
+        //  if (BCrypt.checkpw(String.valueOf(password), String.valueOf(u.getPassword())))
+        for (User user : u) {
+            if (user.getPassword().equals(password)) {
+                return new UserContextVO(user.getUserID(), user.getRole().getName(), user.getUsername());
+            }
+        }
+        return null;
     }
 
     @Override
@@ -49,27 +55,52 @@ public class UserServiceImpl implements UserService {
     public Iterable<ContactMessage> getContactMessages() {
         return contactRepository.findAll();
     }
-/*
+
     @Override
-    public List<User> findAll() {
-        return userRepository.findAll();
+    public Optional<UserDetails> getUserDetails(Integer userID) {
+        return userDetailsRepository.findByUserID(userID);
     }
 
     @Override
-    public User registerNewUser(User u) {
-        if (userRepository.findByLogin(u.getLogin()).size() == 1)
-            return new User(-1);
-        u.setPassword(BCrypt.hashpw(String.valueOf(u.getPassword()), BCrypt.gensalt()).toCharArray());
-        return userRepository.save(u);
+    public Optional<SocialMedia> getUserSocialMedia(String author) {
+        Optional<User> u = userRepository.findByUsername(author);
+        return u.map(user -> socialMediaRepository.findByUserID(user.getUserID())).orElse(null);
+
     }
 
     @Override
-    public UserLoggedDTO logUserIn(String login, char[] password) {
-        ArrayList<User> list = new ArrayList<>(userRepository.findByLogin(login));
-        for (User u : list)
-            if (BCrypt.checkpw(String.valueOf(password), String.valueOf(u.getPassword())))
-                return new UserLoggedDTO(u.getName(), u.getEmail(), u.getSex(), u.getRole());
-        return null;
-    }*/
+    public SocialMedia saveUserSocialMedia(SocialMedia socialMedia) {
+        return socialMediaRepository.save(socialMedia);
+    }
+
+    @Override
+    public PersonalDataSettings savePersonalDataSettings(PersonalDataSettings personalDataSettings) {
+        return personalDataSettingsRepository.save(personalDataSettings);
+    }
+
+    @Override
+    public Optional<PersonalDataSettings> getPersonalDataSettings(Integer userID) {
+        return personalDataSettingsRepository.findByUserID(userID);
+    }
+
+    @Override
+    public SocialMediaSettings saveSocialMediaSettings(SocialMediaSettings socialMediaSettings) {
+        return socialMediaSettingsRepository.save(socialMediaSettings);
+    }
+
+    @Override
+    public Optional<SocialMediaSettings> getSocialMediaSettings(Integer userID) {
+        return socialMediaSettingsRepository.findByUserID(userID);
+    }
+
+    @Override
+    public Theme saveSelectedTheme(Theme theme) {
+        return themeRepository.save(theme);
+    }
+
+    @Override
+    public Optional<Theme> getSelectedTheme(Integer userID) {
+        return themeRepository.findByUserID(userID);
+    }
 
 }

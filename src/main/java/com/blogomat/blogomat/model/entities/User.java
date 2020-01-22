@@ -1,6 +1,7 @@
 package com.blogomat.blogomat.model.entities;
 
 import com.blogomat.blogomat.enums.GENDER;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -21,6 +22,7 @@ public class User implements Serializable {
     private GENDER sex;
     @ManyToOne
     @JoinColumn(name = "role_id")
+    @JsonBackReference
     private Role role;
 
 
