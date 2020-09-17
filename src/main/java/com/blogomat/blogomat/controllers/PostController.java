@@ -33,15 +33,12 @@ public class PostController {
     @GetMapping(path = "/posts")
     public @ResponseBody
     Iterable<Post> getPosts(@RequestParam String sort, @RequestParam String order) {
-        System.out.println("sort  = " + sort);
-        System.out.println("order = " + order);
         return postService.getAllPostsSorted(sort, order);
     }
 
     @PostMapping(path = "/postsFiltered")
     public @ResponseBody
     Iterable<Post> getPostsFiltered(@RequestBody FilterVO filterVO) {
-        System.out.println("filterVO = " + filterVO);
         return postService.getAllPostsSorted(filterVO);
     }
     @PostMapping(path = "/postsByAuthorName")

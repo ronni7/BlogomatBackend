@@ -20,7 +20,6 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public Iterable<PostReport> getReports() {
-        System.out.println("reportRepository = " + reportRepository.findAll());
         return reportRepository.findAll();
     }
 
